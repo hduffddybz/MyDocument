@@ -28,13 +28,13 @@ writeable bytes   = size() - writerIndex
 
 ``` c
 
-size\_t readableBytes() const
+size_t readableBytes() const
 { return writerIndex_ - readerIndex_; }
 
-size\_t writableBytes() const
+size_t writableBytes() const
 { return buffer_.size() - writerIndex_; }
 
-size\_t prependableBytes() const
+size_t prependableBytes() const
 { return readerIndex_; }
 
 ```
