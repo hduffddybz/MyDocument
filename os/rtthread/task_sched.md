@@ -200,7 +200,94 @@ rt_uint8_t rt_thread_ready_table[32];
 ``` 
 
 用二级位图的方法轻松的实现了256个优先级的查找，轻松的达到了O(1)的时间复杂度。
+
+###基于时间片的调度算法
+
+RT-Thread中支持相同优先级的不同任务，对于同优先级的任务调度其采用了基于时间片的调度算法。当系统中存在多个相同的最高优先级线程时，调度器会根据创建线程时设定的时间片进行调度。
+
+我们知道对于任务调度存在着以下几种情况，第一种就是任务主动放弃CPU资源，任务主动调用rt_schedule()进行任务切换，第二种就是外部中断发生时，有更高优先级的任务进入就绪状态，这时也会进行任务切换，第三种情况就是时间中断，时间中断发生时，若任务运行到了其规定的时间片时也会进行任务切换。
+
+首先看看过了一个滴答后，系统做了哪些处理（在src/clock.c下）
+``` c
+/**
+ * This function will notify kernel there is one tick passed. Normally,
+ * this function is invoked by clock ISR.
+ */
+void rt_tick_increase(void)
+{
+    struct rt_thread *thread;
+
+    /* increase the global tick */
+    ++ rt_tick;
+
+    /* check time slice */
+    thread = rt_thread_self();
+
+  （1）  -- thread->remaining_tick;
+  （2）if (thread->remaining_tick == 0)
+    {
+        /* change to initialized tick */
+        thread->remaining_tick = thread->init_tick;
+
+        /* yield */
+        （3）rt_thread_yield();
+    }
+
+    /* check timer */
+    rt_timer_check();
+}
+``` 
+[3]主要的工作为判断任务的时间片是否执行完毕(1),(2)，然后任务执行让出处理器动作(3)，具体见rt_thread_yield（）函数：
+``` c
+/**
+ * This function will let current thread yield processor, and scheduler will
+ * choose a highest thread to run. After yield processor, the current thread
+ * is still in READY state.
+ *
+ * @return RT_EOK
+ */
+rt_err_t rt_thread_yield(void)
+{
+    register rt_base_t level;
+    struct rt_thread *thread;
+
+    /* disable interrupt */
+    level = rt_hw_interrupt_disable();
+
+    /* set to current thread */
+    thread = rt_current_thread;
+
+    /* if the thread stat is READY and on ready queue list */
+   （1） if (thread->stat == RT_THREAD_READY &&
+        thread->tlist.next != thread->tlist.prev)
+    {
+        /* remove thread from thread list */
+       （2） rt_list_remove(&(thread->tlist));
+
+        /* put thread to end of ready queue */
+       （3）rt_list_insert_before(&(rt_thread_priority_table[thread->current_priority]),
+                              &(thread->tlist));
+
+        /* enable interrupt */
+        rt_hw_interrupt_enable(level);
+
+        rt_schedule();
+
+        return RT_EOK;
+    }
+
+    /* enable interrupt */
+    rt_hw_interrupt_enable(level);
+
+    return RT_EOK;
+}
+RTM_EXPORT(rt_thread_yield);
+```
+从rt_thread_yield()函数可以看出执行完时间片的任务只要其仍然处于就绪状态就从该优先级的链表头部中取出放到链表尾部(看(1),(2),(3)处代码)然后执行任务切换函数(看rt_schedule()函数，rt_schedule()执行的是基于位图的最高优先级任务查找与调度)，在rt_schedule()函数中CPU会切换到最高优先级的任务运行，如果没有更高优先级的任务就绪，那么调度器会在原先的优先级中执行下一个任务，运行至指定的时间片后重复相同的动作。
+
 ## 参考文献
 [1]. 维基百科.http://zh.wikipedia.org/zh-cn/%E5%AE%9E%E6%97%B6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F
 
 [2]. RT-Thread编程指南
+
+[3]. GitHub.https://github.com/RT-Thread
