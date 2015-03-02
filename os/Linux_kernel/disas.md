@@ -88,12 +88,12 @@ int main(void)
 - pop %ebp 退栈
 - ret 返回
 
-（g函数）
+（f函数）
 
 - leave 删除为存储变量值x建立的堆栈空间
 - ret 函数返回
 
-（f函数）
+（main函数）
 
 - add $0x5,%eax 函数返回值存在寄存器eax中，并对其值加5
 - leave 删除为存储变量值x建立的堆栈空间
