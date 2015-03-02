@@ -48,7 +48,9 @@ int main(void)
 - 在gdb命令行中使用layout asm,layout regs来查看汇编和寄存器
 
 下面来看看调试的环境：
+
 ![image](https://github.com/hduffddybz/MyDocument/raw/master/img/gdb_1.png)
+
 ![image](https://github.com/hduffddybz/MyDocument/raw/master/img/gdb_2.png)
 
 ### 具体过程
