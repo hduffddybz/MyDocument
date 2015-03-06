@@ -83,6 +83,59 @@ int main(void)
 - leave 删除为存储变量值x建立的堆栈空间
 - ret 函数返回
 
+### 函数调用过程帧栈变化
+
+这里增加对于函数调用过程的帧栈变化的理解
+
+函数调用与函数返回主要用到了call，leave, ret等汇编指令完成的
+
+call（函数调用）相当于如下指令：
+
+- push %eip(下一条指令地址)
+- jmp function
+
+leave相当于如下指令：
+- push %ebp,%esp(撤销栈空间)
+- pop %ebp（跳转到上一个帧栈的%ebp）
+
+而ret（函数返回）相当于如下指令：
+
+- pop %eip
+
+
+下面就以f函数的调用为例说明：
+
+反汇编后看到这里发生了函数f的调用：0x8048407 <main+13>     call   0x80483e7 <f> ，可以看看调用前main函数的帧栈：
+
+![image](https://github.com/hduffddybz/MyDocument/raw/master/img/gdb_3.png)
+
+会发现ebp-esp=0x04,通过键入x 0xbffffca4可以发现在main堆栈的该段地址内存放的是变量值12（f（12）的12）.
+
+键入si,则跳转到了函数f，此时的f函数的帧栈如下：
+
+![image](https://github.com/hduffddybz/MyDocument/raw/master/img/gdb_4.png)
+
+而同时也可以看看main函数调用处的下一指令地址：
+
+![image](https://github.com/hduffddybz/MyDocument/raw/master/img/gdb_6.png)
+
+从f函数的帧栈中可以看到call指令确实是将下一条指令的地址压入堆栈，并进行跳转。
+
+进入函数f后要执行帧栈的建立，具体代码如下：
+
+- push %ebp
+- mov %esp,%ebp
+
+经历如下步骤后，函数的帧栈变化成如下：
+
+![image](https://github.com/hduffddybz/MyDocument/raw/master/img/gdb_8.png)
+
+再来看看函数返回的情况，执行return汇编后f函数的帧栈的变化：
+
+![image](https://github.com/hduffddybz/MyDocument/raw/master/img/gdb_7.png)
+
+这时的帧栈跟进入f函数时的帧栈一致，只要执行pop %eip即可完成函数的返回
+
 ## 体会
 
 计算机通过堆栈的弹出压入实现变量的传递和函数的跳转，堆栈是构成程序基本元素。另外学习汇编有助于加深对程序的理解！
