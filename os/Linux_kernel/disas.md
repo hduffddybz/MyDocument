@@ -141,7 +141,7 @@ leave相当于如下指令：
 
 ![image](https://github.com/hduffddybz/MyDocument/raw/master/img/gdb_8.png)
 
-这里新建了函数f的帧栈。
+这里新建了函数f的帧栈(堆栈向下增长)。
 再来看看函数返回的情况，执行return汇编后f函数的帧栈的变化：
 
 ![image](https://github.com/hduffddybz/MyDocument/raw/master/img/gdb_7.png)
