@@ -102,11 +102,8 @@ int main(void)
 ### 函数调用过程帧栈变化
 
 这里增加对于函数调用过程的帧栈变化的理解
-
 函数调用与函数返回主要用到了call，leave, ret等汇编指令完成的
-
 call（函数调用）相当于如下指令：
-
 - push %eip(下一条指令地址)
 - jmp function
 
@@ -115,7 +112,6 @@ leave相当于如下指令：
 - pop %ebp（跳转到上一个帧栈的%ebp）
 
 而ret（函数返回）相当于如下指令：
-
 - pop %eip
 
 
@@ -125,7 +121,7 @@ leave相当于如下指令：
 
 ![image](https://github.com/hduffddybz/MyDocument/raw/master/img/gdb_3.png)
 
-会发现ebp-esp=0x04,通过键入x 0xbffffca4可以发现在main堆栈的该段地址内存放的是变量值12（f（12）的12）.
+会发现ebp-esp=0x04,通过键入x 0xbffffca4可以发现在main堆栈的该段地址放的是变量值12（f（12）的12）.
 
 键入si,则跳转到了函数f，此时的f函数的帧栈如下：
 
@@ -136,7 +132,6 @@ leave相当于如下指令：
 ![image](https://github.com/hduffddybz/MyDocument/raw/master/img/gdb_6.png)
 
 从f函数的帧栈中可以看到call指令确实是将下一条指令的地址压入堆栈，并进行跳转。
-
 进入函数f后要执行帧栈的建立，具体代码如下：
 
 - push %ebp
@@ -146,11 +141,12 @@ leave相当于如下指令：
 
 ![image](https://github.com/hduffddybz/MyDocument/raw/master/img/gdb_8.png)
 
+这里新建了函数f的帧栈。
 再来看看函数返回的情况，执行return汇编后f函数的帧栈的变化：
 
 ![image](https://github.com/hduffddybz/MyDocument/raw/master/img/gdb_7.png)
 
-这时的帧栈跟进入f函数时的帧栈一致，只要执行pop %eip即可完成函数的返回
+这时的帧栈跟进入f函数时的帧栈一致，只要执行pop %eip（通过ret汇编完成）即可完成函数的返回
 
 ## 体会
 
