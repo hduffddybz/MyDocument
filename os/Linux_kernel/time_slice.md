@@ -84,7 +84,7 @@ void __init my_start_kernel(void)
 }   
 ```
 
-
+```c
 void __init my_start_kernel(void)
 {
     int pid = 0;
@@ -118,6 +118,7 @@ void __init my_start_kernel(void)
     	: "c" (task[pid].thread.ip),"d" (task[pid].thread.sp)	/* input c or d mean %ecx/%edx*/
 	);
 }  
+```
 
 其中执行完进程初始化，内存分布如下所示：
 ![image](https://github.com/hduffddybz/MyDocument/raw/master/img/time_1.png)
