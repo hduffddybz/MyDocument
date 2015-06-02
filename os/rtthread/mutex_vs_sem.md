@@ -1,10 +1,10 @@
-# ���������ֵ�ź���������RT-ThreadΪ����
+# 互斥量与二值信号量区别（以RT-Thread为例）
 
-��������һ��������ź���������ֵ�ź������������������߲�����һ���¡���������һ��������RT-Thread����һ���̣߳���ӵ�У�����һ��������ֻ����ӵ���߲����ͷţ�����֧�ֻ������ݹ���ʣ���ֹ���ȼ���ת�����ԡ�
+互斥量是一种特殊的信号量（即二值信号量），但是他们两者并不是一回事。互斥量被一个任务（在RT-Thread中是一个线程）所拥有，所以一个互斥量只有其拥有者才能释放，并且支持互斥量递归访问，防止优先级反转等特性。
 
-����������RTT���ź����������ṹ����ʲô����
+首先来看看RTT中信号量互斥量结构体有什么区别？
 
-## �ź����ṹ�壺
+## 信号量结构体：
 
 ``` c
 
@@ -21,7 +21,7 @@ typedef struct rt_semaphore *rt_sem_t;
 
 ```
 
-## �������ṹ�壺
+## 互斥量结构体：
 
 ``` c
 
@@ -43,7 +43,7 @@ typedef struct rt_mutex *rt_mutex_t;
 
 ```
 
-## ���������ź������̳е�ipc�ṹ�����£�
+## 互斥量，信号量所继承的ipc结构体如下：
 
 ``` c
 
@@ -56,9 +56,9 @@ struct rt_ipc_object
 
 ```
 
-�����Ե��ǻ������ṹ����ź����ṹ������orginal_priority,��owener���ֶΣ�����original_priority�����Ƿ�ֹ���ȼ���ת֮�ã���owener�ֶ�ָ���Ǹû������������ߡ�
+很明显的是互斥量结构体比信号量结构体多的是orginal_priority,和owener等字段，引入original_priority作用是防止优先级反转之用，而owener字段指的是该互斥量的所有者。
 
-����mutex�ǿ�����ģ���semaphore�ǲ�������ģ�����һ���߳������һ����ֵ�ź������еݹ���лᵼ�µ�ǰ�̹߳��𡣿��Կ���rt_sem_take()�е�ʵ�֣�
+mutex是可重入的，而semaphore是不可重入的，一个线程如果对一个二值信号量进行递归持有会导致当前线程挂起。可以看看rt_sem_take()中的实现：
 
 ``` c
 
@@ -150,10 +150,9 @@ RTM_EXPORT(rt_sem_take);
 
 ```
 
-��һ���̻߳�ȡһ����ֵ�ź���ʱ��value����ٵ�0�������߳��ٴλ�ȡ���ź���ʱ������vauleֵС��0ʱ���Ὣ��ǰ�̹߳��𣬲�������뵽�ȴ������У����ڸ��ź������ᱻ�ͷţ����Ը��̻߳�һֱִ�У�ֱ����ʱʱ�䵽
-���ڸ��߳�Ϊ����״̬�������޷�������������У����Ը��߳̽��޷��õ����С�
+当一个线程获取一个二值信号量时，value会减少到0，当该线程再次获取该信号量时，由于vaule值小于0时，会将当前线程挂起，并将其插入到等待队列中，由于该信号量不会被释放，所以该线程会一直执行，直到定时时间到,由于该线程为挂起状态，故在定时超时函数中无法将该线程加入就绪队列中，所以该线程将无法得到运行。
 
-���������Ĳ����Ͳ��������ˣ�
+而互斥量的操作就不是这样了：
 
 ``` c
 
@@ -281,8 +280,8 @@ RTM_EXPORT(rt_mutex_take);
 
 ```
 
-��Ҫ�������������øû��������߳��Ǹû�������ӵ����ʱ��Ҳ����һ���̵߳ݹ���л�����������ô��ȡ�Ĳ����ǽ�holdֵ��1��
-���ͷ�����ʱ��ֻ�е�holdֵ���ٵ�0��ʱ���������ִ��valueֵ��1�Ķ�����
+主要区别在于如果获得该互斥锁的线程是该互斥锁的拥有者时（也就是一个线程递归持有互斥锁），那么采取的操作是将hold值加1，
+在释放锁的时候，只有当hold值减少到0的时候，其会真正执行value值加1的动作。
 
-��Ȼmutex���и�������ԣ�����֧�����ȼ��̳�Э�飬�����д���if(thread->current_priority < mutex->owener->current_priority),
-�������ľ��ǽ������ȼ���ӵ�л��������߳���ߵ������ȼ�����Ҫ�ù�����Դ���߳����С�
+当然mutex会有更多的特性，比如支持优先级继承协议，看这行代码if(thread->current_priority < mutex->owener->current_priority),
+这里做的就是将低优先级的拥有互斥量的线程提高到高优先级的需要该共享资源的线程运行。
