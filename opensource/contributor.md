@@ -1,51 +1,62 @@
-# ÈçºÎ¸ø kernel.org ÏÂÏîÄ¿¹±Ï×´úÂë
+# å¦‚ä½•ç»™ kernel.org ä¸‹é¡¹ç›®è´¡çŒ®ä»£ç 
 
-## Ê¹ÓÃ git Ìá½»´úÂë
+## ä½¿ç”¨ git æäº¤ä»£ç 
 
 > git add your-file
+
 > git commit -s -m "description of your commit"
 
--s ±íÊ¾Éú³É Signed-off-by µÄÐÅÏ¢
+-s è¡¨ç¤ºç”Ÿæˆ Signed-off-by çš„ä¿¡æ¯
 
-## Ê¹ÓÃ git Éú³É²¹¶¡
+## ä½¿ç”¨ git ç”Ÿæˆè¡¥ä¸
 
 > git format-patch -1
 
-ÕâÀï»á½«×î½üÒ»´ÎµÄÌá½»Éú³É²¹¶¡ÎÄ¼þ£¬¿ÉÒÔÔÚµ±Ç°Ä¿Â¼ÏÂ¿´µ½ 0001-*.patch ÎÄ¼þ
+è¿™é‡Œä¼šå°†æœ€è¿‘ä¸€æ¬¡çš„æäº¤ç”Ÿæˆè¡¥ä¸æ–‡ä»¶ï¼Œå¯ä»¥åœ¨å½“å‰ç›®å½•ä¸‹çœ‹åˆ° 0001-*.patch æ–‡ä»¶
 
-## Ê¹ÓÃÓÊ¼þ·¢ËÍÄãµÄ patch ¸ø maintainer Óë mailing list
+## ä½¿ç”¨é‚®ä»¶å‘é€ä½ çš„ patch ç»™ maintainer ä¸Ž mailing list
 
-´úÂë¿âÏÂ»áÓÐÎÄ¼þÃèÊö maintainer µÄÐÅÏ¢£¬ÕâÀïÒÔ rt-tests ÎªÀý£¬ÔÚ MAINTAINERS ÎÄ¼þÖÐÓÐ maintainer µÄÓÊ¼þµØÖ·£¬¿É½«ÄãµÄ patch ·¢¸øÉÏÊöµØÖ·¡£
+ä»£ç åº“ä¸‹ä¼šæœ‰æ–‡ä»¶æè¿° maintainer çš„ä¿¡æ¯ï¼Œè¿™é‡Œä»¥ rt-tests ä¸ºä¾‹ï¼Œåœ¨ MAINTAINERS æ–‡ä»¶ä¸­æœ‰ maintainer çš„é‚®ä»¶åœ°å€ï¼Œå¯å°†ä½ çš„ patch å‘ç»™ä¸Šè¿°åœ°å€ã€‚
 
-## Ê¹ÓÃ Mutt ·¢ËÍ patch
+## ä½¿ç”¨ Mutt å‘é€ patch
 
-[email_clients](http://lxr.free-electrons.com/source/Documentation/email-clients.txt) ÕâÀïÃèÊöÁËÐí¶à¿ÉÑ¡ÓÃµÄ email ¿Í»§¶Ë£¬ÕâÀïÒÔ Mutt ÎªÀý£º
+[email_clients](http://lxr.free-electrons.com/source/Documentation/email-clients.txt) è¿™é‡Œæè¿°äº†è®¸å¤šå¯é€‰ç”¨çš„ email å®¢æˆ·ç«¯ï¼Œè¿™é‡Œä»¥ Mutt ä¸ºä¾‹ï¼š
 
-Ê¹ÓÃ Mutt ±ØÐëÅäÖÃºÃ msmtp£¬msmtp µÄÅäÖÃ¿É´ÓÍøÂçËÑË÷£¬×¢Òâµ½ Gmail ÔÚ¹úÄÚ·ÃÎÊÊ®·ÖÀ§ÄÑ£¬ÕâÀï×ª»»Ë¼Â·À´Ê¹ÓÃ Gmail¡£
+ä½¿ç”¨ Mutt å¿…é¡»é…ç½®å¥½ msmtpï¼Œmsmtp çš„é…ç½®å¯ä»Žç½‘ç»œæœç´¢ï¼Œæ³¨æ„åˆ° Gmail åœ¨å›½å†…è®¿é—®ååˆ†å›°éš¾ï¼Œè¿™é‡Œè½¬æ¢æ€è·¯æ¥ä½¿ç”¨ Gmailã€‚
 
-ÔÚÄãµÄ git ¿Í»§¶ËÖÐÐèÅäÖÃÄãµÄÓÊ¼þµØÖ·ÎªÒª·¢ËÍµÄ Gmail µØÖ·£¬ÅäÖÃ·½·¨ÈçÏÂ£º
+åœ¨ä½ çš„ git å®¢æˆ·ç«¯ä¸­éœ€é…ç½®ä½ çš„é‚®ä»¶åœ°å€ä¸ºè¦å‘é€çš„ Gmail åœ°å€ï¼Œé…ç½®æ–¹æ³•å¦‚ä¸‹ï¼š
 
 > git config --global user.name "Yuanbin Zhou"
+
 > git config --global user.email "hduffddybz@gmail.com"
 
-¶øÔÚ msmtp ÖÐÊ¹ÓÃ 126 ÓÊÏäÀ´×ª·¢ gmail ÓÊ¼þ£¬msmtpµÄÅäÖÃÈçÏÂ£º
+è€Œåœ¨ msmtp ä¸­ä½¿ç”¨ 126 é‚®ç®±æ¥è½¬å‘ gmail é‚®ä»¶ï¼Œmsmtpçš„é…ç½®å¦‚ä¸‹ï¼š
 
 >account 126
+
 >protocol smtp
+
 >host smtp.126.com
+
 >from ffddybz123@126.com
+
 >user ffddybz123@126.com
+
 >password *******
+
 >auth on
+
 >tls on
+
 >tls_trust_file /etc/ssl/certs/ca-certificates.crt
+
 >syslog LOG_MAIL
 
 >account default:126
 
-Íê³ÉÒÔÉÏ²½Öèºó¾Í¿ÉÊ¹ÓÃ mutt -H 0001-*.patch À´·¢ËÍÄãµÄ patch£¬×¢Òâ¿ÉÔÚÓÊ¼þÖÐ×«Ð´ÊÕ¼þÕß£¬³­ËÍÕß£¬Ö÷Ìâ£¬ÒÔ¼°¼òÒªµÄËµÃ÷¡£
+å®Œæˆä»¥ä¸Šæ­¥éª¤åŽå°±å¯ä½¿ç”¨ mutt -H 0001-*.patch æ¥å‘é€ä½ çš„ patchï¼Œæ³¨æ„å¯åœ¨é‚®ä»¶ä¸­æ’°å†™æ”¶ä»¶è€…ï¼ŒæŠ„é€è€…ï¼Œä¸»é¢˜ï¼Œä»¥åŠç®€è¦çš„è¯´æ˜Žã€‚
 
-×¢Òâµ½ÕâÀïÎ´×÷ Mutt µÄÊÕÐÅÉèÖÃ£¬ÆäÊµÄã¿ÉÒÔÔÚÆäËüÓÊ¼þ¿Í»§¶Ë»òÕßÍøÒ³°æµÄ Gmail ÖÐ»ñÈ¡ÉÏÓÎµÄ·´À¡£¬¶øÒ»µ©ÐèÒª¸ü¸Ä patch ÐèÒªÖØÐÂÐ´·âÓÊ¼þ¡£
+æ³¨æ„åˆ°è¿™é‡Œæœªä½œ Mutt çš„æ”¶ä¿¡è®¾ç½®ï¼Œå…¶å®žä½ å¯ä»¥åœ¨å…¶å®ƒé‚®ä»¶å®¢æˆ·ç«¯æˆ–è€…ç½‘é¡µç‰ˆçš„ Gmail ä¸­èŽ·å–ä¸Šæ¸¸çš„åé¦ˆï¼Œè€Œä¸€æ—¦éœ€è¦æ›´æ”¹ patch éœ€è¦é‡æ–°å†™å°é‚®ä»¶ã€‚
 
  
 
